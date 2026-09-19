@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Card, EmptyState, SkeletonList } from "@/components/ui";
 import { notifyLocally } from "@/components/notification-permission";
 import { useLanguage, useToast } from "@/components/providers";
@@ -25,31 +25,34 @@ export default function NotificationsPage() {
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [unread, setUnread] = useState(0);
-  const lastCount = useState({ current: 0 })[0];
+  const lastCountRef = useRef(0);
 
   const load = useCallback(async () => {
     try {
       const data = await apiFetch<{ items: NotificationItem[]; unread: number }>("/api/notifications");
       setItems(data.items);
       setUnread(data.unread);
-      if (data.unread > lastCount.current && lastCount.current > 0) {
+      if (data.unread > lastCountRef.current && lastCountRef.current > 0) {
         notifyLocally(
           language === "bn" ? "মণিরামপুর ব্লাড নেটওয়ার্ক" : "Manirampur Blood Network",
           language === "bn" ? "আপনার জন্য নতুন একটি বিজ্ঞপ্তি আছে।" : "You have a new notification.",
         );
       }
-      lastCount.current = data.unread;
+      lastCountRef.current = data.unread;
     } catch {
       setItems([]);
     } finally {
       setLoading(false);
     }
-  }, [language, lastCount]);
+  }, [language]);
 
   useEffect(() => {
-    void load();
+    const initialLoad = window.setTimeout(() => void load(), 0);
     const timer = setInterval(() => void load(), 60_000);
-    return () => clearInterval(timer);
+    return () => {
+      window.clearTimeout(initialLoad);
+      clearInterval(timer);
+    };
   }, [load]);
 
   async function markAllRead() {

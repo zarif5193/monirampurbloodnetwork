@@ -52,7 +52,6 @@ export default function CompleteProfilePage() {
       return;
     }
     if (session.profileComplete) router.replace("/home");
-    setForm((current) => ({ ...current, displayName: current.displayName || "" }));
   }, [loading, session, router]);
 
   useEffect(() => {

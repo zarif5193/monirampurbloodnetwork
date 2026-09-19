@@ -102,7 +102,8 @@ export function AdminPanel({ role }: { role: UserRole }) {
   }, [push, tx]);
 
   useEffect(() => {
-    void load();
+    const initialLoad = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(initialLoad);
   }, [load]);
 
   async function setRequestStatus(id: string, status: string) {
@@ -387,7 +388,8 @@ function EmergencyManager() {
   }, []);
 
   useEffect(() => {
-    void load().catch(() => setItems([]));
+    const initialLoad = window.setTimeout(() => void load().catch(() => setItems([])), 0);
+    return () => window.clearTimeout(initialLoad);
   }, [load]);
 
   return (
@@ -508,7 +510,8 @@ function RulesManager() {
   }, []);
 
   useEffect(() => {
-    void load().catch(() => setItems([]));
+    const initialLoad = window.setTimeout(() => void load().catch(() => setItems([])), 0);
+    return () => window.clearTimeout(initialLoad);
   }, [load]);
 
   return (

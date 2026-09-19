@@ -63,19 +63,18 @@ export function useSession() {
 /* --------------------------- provider tree -------------------------- */
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("bn");
-  const [toasts, setToasts] = useState<Toast[]>([]);
-  const [session, setSession] = useState<SessionState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const toastId = useRef(0);
-
-  useEffect(() => {
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof document === "undefined") return "bn";
     const stored = document.cookie
       .split("; ")
       .find((row) => row.startsWith("mbn_lang="))
       ?.split("=")[1];
-    if (stored === "bn" || stored === "en") setLanguageState(stored);
-  }, []);
+    return stored === "bn" || stored === "en" ? stored : "bn";
+  });
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [session, setSession] = useState<SessionState | null>(null);
+  const [loading, setLoading] = useState(true);
+  const toastId = useRef(0);
 
   const setLanguage = useCallback((value: Language) => {
     setLanguageState(value);
@@ -102,7 +101,8 @@ export function AppProviders({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void refresh();
+    const initialRefresh = window.setTimeout(() => void refresh(), 0);
+    return () => window.clearTimeout(initialRefresh);
   }, [refresh]);
 
   useEffect(() => {

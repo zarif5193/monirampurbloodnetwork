@@ -53,6 +53,7 @@ export default function ProfilePage() {
   const [passwords, setPasswords] = useState({ currentPassword: "", password: "", confirmPassword: "" });
   const [donation, setDonation] = useState({ lastDonationDate: "", donationCount: "", weightKg: "" });
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [today] = useState(() => Date.now());
 
   const load = useCallback(async () => {
     try {
@@ -71,10 +72,13 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    void load();
-    apiFetch<{ preferences: Preferences | null }>("/api/notifications/preferences")
-      .then((response) => setPreferences(response.preferences))
-      .catch(() => setPreferences(null));
+    const initialLoad = window.setTimeout(() => {
+      void load();
+      void apiFetch<{ preferences: Preferences | null }>("/api/notifications/preferences")
+        .then((response) => setPreferences(response.preferences))
+        .catch(() => setPreferences(null));
+    }, 0);
+    return () => window.clearTimeout(initialLoad);
   }, [load]);
 
   async function saveAvailability(availabilityStatus: string) {
@@ -169,7 +173,7 @@ export default function ProfilePage() {
 
   const profile = data.profile;
   const age = profile.dateOfBirth
-    ? Math.floor((Date.now() - new Date(`${profile.dateOfBirth}T00:00:00Z`).getTime()) / (365.25 * 24 * 3600 * 1000))
+    ? Math.floor((today - new Date(`${profile.dateOfBirth}T00:00:00Z`).getTime()) / (365.25 * 24 * 3600 * 1000))
     : null;
 
   return (

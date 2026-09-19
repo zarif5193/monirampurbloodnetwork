@@ -13,20 +13,17 @@ export function NotificationPermissionCard() {
   const { push } = useToast();
   const [visible, setVisible] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [supported, setSupported] = useState(true);
+  const [supported] = useState(() => typeof window !== "undefined" && "Notification" in window);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !("Notification" in window)) {
-      setSupported(false);
-      return;
-    }
+    if (!supported) return;
     const dismissed = window.localStorage.getItem("mbn_notification_prompt");
     if (dismissed) return;
     if (Notification.permission === "default") {
       const timer = setTimeout(() => setVisible(true), 1400);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [supported]);
 
   const enable = useCallback(async () => {
     setBusy(true);
@@ -65,7 +62,7 @@ export function NotificationPermissionCard() {
   const postpone = useCallback(() => {
     window.localStorage.setItem("mbn_notification_prompt", "later");
     setVisible(false);
-  }, [language]);
+  }, []);
 
   if (!visible || !supported) return null;
 
