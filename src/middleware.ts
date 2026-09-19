@@ -38,6 +38,16 @@ export function middleware(request: NextRequest) {
 }
 
 function applyHeaders(response: NextResponse) {
+  const isDevelopment = process.env.NODE_ENV !== "production";
+  const scriptSources = ["'self'", "'unsafe-inline'"];
+  const connectSources = ["'self'"];
+
+  if (isDevelopment) {
+    // Next.js development tooling uses eval and a websocket for HMR.
+    scriptSources.push("'unsafe-eval'");
+    connectSources.push("ws:", "wss:");
+  }
+
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -50,11 +60,11 @@ function applyHeaders(response: NextResponse) {
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src ${scriptSources.join(" ")}`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob:",
-      "connect-src 'self'",
+      `connect-src ${connectSources.join(" ")}`,
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
