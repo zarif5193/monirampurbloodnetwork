@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { AuthShell } from "@/components/auth-shell";
 import { Alert, Field } from "@/components/ui";
-import { useApiError, useLanguage, useToast } from "@/components/providers";
+import { useApiError, useLanguage, useSession, useToast } from "@/components/providers";
 import { apiFetch } from "@/lib/client/api";
 
 function passwordScore(value: string) {
@@ -23,6 +23,7 @@ export default function RegisterPage() {
   const { tx } = useLanguage();
   const describeError = useApiError();
   const { push } = useToast();
+  const { refresh } = useSession();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -58,6 +59,7 @@ export default function RegisterPage() {
         method: "POST",
         body: JSON.stringify(form),
       });
+      await refresh();
       push(
         tx(
           "রেজিস্ট্রেশন সফল হয়েছে। ইমেইলে পাঠানো কোডটি দিয়ে যাচাই করুন।",

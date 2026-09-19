@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AuthShell } from "@/components/auth-shell";
 import { Alert, Field } from "@/components/ui";
-import { useApiError, useLanguage, useToast } from "@/components/providers";
+import { useApiError, useLanguage, useSession, useToast } from "@/components/providers";
 import { apiFetch } from "@/lib/client/api";
 
 type LoginResponse = { stage: string; emailVerified: boolean; profileComplete: boolean };
@@ -16,6 +16,7 @@ function LoginForm() {
   const { tx } = useLanguage();
   const describeError = useApiError();
   const { push } = useToast();
+  const { refresh } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -30,6 +31,7 @@ function LoginForm() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
+      await refresh();
       if (data.stage === "VERIFY_EMAIL") {
         router.replace("/verify-email");
       } else if (data.stage === "COMPLETE_PROFILE") {
