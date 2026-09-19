@@ -354,7 +354,10 @@ export default function ProfilePage() {
             <Link href="/about" className="font-medium text-brand hover:underline">{tx("পরিচিতি", "About")}</Link>
           </div>
           <p className="mt-3 text-[12.5px] text-ink-muted">
-            {tx("সহায়তায় যোগাযোগ", "Support")}: support@manirampurbloodnetwork.example
+            {tx("সহায়তায় যোগাযোগ", "Support")}: {" "}
+            <a href="mailto:monirampurbloodnetwork@gmail.com" className="font-medium text-brand hover:underline">
+              monirampurbloodnetwork@gmail.com
+            </a>
           </p>
         </Card>
       </section>

@@ -201,6 +201,7 @@ export async function PATCH(request: Request) {
       availabilityStatus: data.availabilityStatus ?? profile.availabilityStatus,
       lastDonationDate:
         data.lastDonationDate === undefined ? profile.lastDonationDate : data.lastDonationDate,
+      donationCount: data.donationCount === undefined ? profile.donationCount : data.donationCount,
     };
 
     const rules = await getActiveEligibilityRules();
@@ -226,6 +227,7 @@ export async function PATCH(request: Request) {
         area: merged.area ?? null,
         availabilityStatus: merged.availabilityStatus,
         lastDonationDate: merged.lastDonationDate ?? null,
+        donationCount: merged.donationCount,
         nextPotentialDonationDate,
         searchable: merged.availabilityStatus === "AVAILABLE",
         ruleVersionUsed: ruleVersion,
