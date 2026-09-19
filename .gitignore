@@ -1,0 +1,20 @@
+node_modules
+.next
+out
+build
+dist
+
+# Environment & secrets — never commit
+.env
+.env.local
+.env.production
+.env*.local
+
+private-uploads
+*.log
+npm-debug.log*
+.DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo
+.vercel
+.turbo

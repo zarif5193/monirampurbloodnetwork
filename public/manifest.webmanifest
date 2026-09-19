@@ -1,0 +1,39 @@
+{
+  "name": "মণিরামপুর ব্লাড নেটওয়ার্ক",
+  "short_name": "রক্ত নেটওয়ার্ক",
+  "description": "মণিরামপুর উপজেলার যাচাইকৃত রক্তদাতা নেটওয়ার্ক — এক ব্যাগ রক্ত, একটি জীবন।",
+  "lang": "bn",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f4f3",
+  "theme_color": "#8d1224",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "রক্তদাতা খুঁজুন", "url": "/donors" },
+    { "name": "জরুরি সেবা", "url": "/emergency" },
+    { "name": "রক্তের অনুরোধ", "url": "/requests/new" }
+  ]
+}
